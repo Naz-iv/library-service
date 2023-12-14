@@ -27,4 +27,6 @@ urlpatterns = [
         "api/borrowing_service",
         include("borrowing_service.urls", namespace="borrowing_service")
     ),
+    path("api/users/",
+         include("customer.urls", namespace="customer")),
 ]
