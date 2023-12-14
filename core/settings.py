@@ -41,6 +41,8 @@ INSTALLED_APPS = [
     "rest_framework_simplejwt",
     "customer",
     "book_service",
+    "borrowing_service",
+    "rest_framework"
 ]
 
 MIDDLEWARE = [

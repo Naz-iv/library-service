@@ -17,3 +17,13 @@ class Book(models.Model):
     )
     inventory = models.IntegerField(validators=[MinValueValidator(0)])
     daily_fee = models.DecimalField(decimal_places=2, max_digits=1000)
+
+    @property
+    def available(self) -> bool:
+        if self.inventory:
+            return True
+        return False
+
+    class Meta:
+        unique_together = ("title", "author", "cover")
+        ordering = ["title", "author", "-inventory"]
