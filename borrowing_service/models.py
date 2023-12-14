@@ -7,6 +7,7 @@ from core import settings
 
 BORROW_TERM = timezone.timedelta(days=14)
 
+
 def set_expected_return_date():
     return timezone.now() + BORROW_TERM
 

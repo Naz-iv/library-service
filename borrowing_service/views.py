@@ -3,7 +3,10 @@ from rest_framework import viewsets, mixins
 from rest_framework.permissions import IsAuthenticated
 
 from borrowing_service.models import Borrowing
-from borrowing_service.serializers import BorrowingSerializer, BorrowingCreateSerializer
+from borrowing_service.serializers import (
+    BorrowingSerializer,
+    BorrowingCreateSerializer,
+)
 from book_service.models import Book
 
 
