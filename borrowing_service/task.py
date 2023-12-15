@@ -1,14 +1,16 @@
 from __future__ import absolute_import, unicode_literals
 
-from celery import task
+from celery import shared_task
 from celery.utils.log import get_task_logger
+from django.utils import timezone
 
-from borrowing_service.utils import check_overdue
+from borrowing_service.models import Borrowing
 
 logger = get_task_logger(__name__)
 
 
-@task(name="check_overdue_task")
-def check_overdue_task(borrowing):
-    logger.info("Check borrowing overdue")
-    return check_overdue(borrowing)
+@shared_task(name="check_overdue_task")
+def check_overdue_task(self):
+    borrowings = Borrowing.objects.filter(
+        expected_return_date__lte=timezone.now()+timezone.timedelta(days=1)
+    )
