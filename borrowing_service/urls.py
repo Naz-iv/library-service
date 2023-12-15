@@ -9,7 +9,9 @@ router.register("borrowings", views.BorrowingViewSet)
 
 urlpatterns = [
     path("/", include(router.urls)),
-    path("/borrowings/<int:pk>/return/", borrowing_return, name="borrowings-return")
+    path("/borrowings/<int:pk>/return/",
+         borrowing_return,
+         name="borrowings-return")
 ]
 
 app_name = "borrowing_service"

@@ -55,7 +55,13 @@ def borrowing_return(request, pk):
             borrowing.book.save()
             borrowing.save()
 
-            return Response({"status": "success", "message": "Thank you! The book is returned "}, status=200)
+            return Response(
+                {"status": "success", "message":
+                    "Thank you! The book is returned "},
+                status=200
+            )
 
-        return Response({"status": "fail", "message": "Book is already returned"}, status=400)
-
+        return Response(
+            {"status": "fail", "message": "Book is already returned"},
+            status=400
+        )
