@@ -3,6 +3,7 @@ from rest_framework import serializers
 from rest_framework.exceptions import ValidationError
 
 from borrowing_service.models import Borrowing
+from payment_service.serializers import PaymentSerializer, PaymentListSerializer
 from payment_service.services import get_payment
 
 
@@ -40,3 +41,41 @@ class BorrowingCreateSerializer(serializers.ModelSerializer):
         )
         get_payment(borrowing)
         return borrowing
+
+
+class BorrowingListSerializer(BorrowingSerializer):
+    payments = PaymentListSerializer(
+        many=True, read_only=True
+    )
+
+    class Meta:
+        model = Borrowing
+        fields = (
+            "pk",
+            "borrow_date",
+            "expected_return_date",
+            "actual_return_date",
+            "book",
+            "user",
+            "is_active",
+            "payments"
+        )
+
+
+class BorrowingDetailSerializer(BorrowingSerializer):
+    payments = PaymentSerializer(
+        many=True, read_only=True
+    )
+
+    class Meta:
+        model = Borrowing
+        fields = (
+            "pk",
+            "borrow_date",
+            "expected_return_date",
+            "actual_return_date",
+            "book",
+            "user",
+            "is_active",
+            "payments"
+        )
