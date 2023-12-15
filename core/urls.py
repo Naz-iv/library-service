@@ -20,13 +20,15 @@ from django.urls import path, include
 urlpatterns = [
     path("admin/", admin.site.urls),
     path(
-        "api/book_service",
+        "api/book_service/",
         include("book_service.urls", namespace="book_service")
     ),
     path(
-        "api/borrowing_service",
+        "api/borrowing_service/",
         include("borrowing_service.urls", namespace="borrowing_service")
     ),
     path("api/users/",
          include("customer.urls", namespace="customer")),
+    path("api/payment_service/",
+         include("payment_service.urls", namespace="payment_service"))
 ]

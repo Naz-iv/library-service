@@ -10,6 +10,7 @@ from borrowing_service.serializers import (
     BorrowingSerializer,
     BorrowingCreateSerializer,
 )
+from payment_service.services import get_payment
 
 
 class BorrowingViewSet(
@@ -22,7 +23,13 @@ class BorrowingViewSet(
     permission_classes = (IsAuthenticated,)
 
     def get_queryset(self):
-        queryset = self.queryset.filter(user=self.request.user)
+        if not self.request.user.is_superuser:
+            queryset = self.queryset.filter(user=self.request.user)
+        else:
+            queryset = self.queryset
+            user_id = self.request.query_params.get("user_id")
+            if user_id:
+                queryset = queryset.filter(user__id=user_id)
         is_active = str(self.request.query_params.get("is_active"))
 
         if is_active == "True":
@@ -50,7 +57,8 @@ def borrowing_return(request, pk):
     if request.method == "POST":
         if borrowing.is_active:
             borrowing.is_active = False
-            borrowing.expected_return_date = timezone.now()
+            borrowing.actual_return_date = timezone.now()
+            get_payment(borrowing)
             borrowing.book.inventory += 1
             borrowing.book.save()
             borrowing.save()

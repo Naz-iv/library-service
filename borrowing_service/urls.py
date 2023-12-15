@@ -8,7 +8,7 @@ router = routers.DefaultRouter()
 router.register("borrowings", views.BorrowingViewSet)
 
 urlpatterns = [
-    path("/", include(router.urls)),
+    path("", include(router.urls)),
     path("borrowings/<int:pk>/return/",
          borrowing_return,
          name="borrowings-return")
