@@ -8,7 +8,7 @@ from rest_framework.response import Response
 from borrowing_service.models import Borrowing
 from borrowing_service.serializers import (
     BorrowingSerializer,
-    BorrowingCreateSerializer,
+    BorrowingCreateSerializer, BorrowingDetailSerializer, BorrowingListSerializer,
 )
 from payment_service.services import get_payment
 
@@ -42,6 +42,11 @@ class BorrowingViewSet(
 
         if self.action == "create":
             return BorrowingCreateSerializer
+        if self.action == "retrieve":
+            return BorrowingDetailSerializer
+        if self.action == "list":
+            return BorrowingListSerializer
+
         return BorrowingSerializer
 
     def perform_create(self, serializer):
@@ -57,7 +62,7 @@ def borrowing_return(request, pk):
     if request.method == "POST":
         if borrowing.is_active:
             borrowing.is_active = False
-            borrowing.actual_return_date = timezone.now()
+            borrowing.actual_return_date = timezone.now().date()
             get_payment(borrowing)
             borrowing.book.inventory += 1
             borrowing.book.save()
