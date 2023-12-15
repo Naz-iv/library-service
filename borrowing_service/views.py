@@ -10,6 +10,7 @@ from borrowing_service.serializers import (
     BorrowingSerializer,
     BorrowingCreateSerializer,
 )
+from payment_service.services import get_payment
 
 
 class BorrowingViewSet(
@@ -56,7 +57,8 @@ def borrowing_return(request, pk):
     if request.method == "POST":
         if borrowing.is_active:
             borrowing.is_active = False
-            borrowing.expected_return_date = timezone.now()
+            borrowing.actual_return_date = timezone.now()
+            get_payment(borrowing)
             borrowing.book.inventory += 1
             borrowing.book.save()
             borrowing.save()
