@@ -22,7 +22,13 @@ class BorrowingViewSet(
     permission_classes = (IsAuthenticated,)
 
     def get_queryset(self):
-        queryset = self.queryset.filter(user=self.request.user)
+        if not self.request.user.is_superuser:
+            queryset = self.queryset.filter(user=self.request.user)
+        else:
+            queryset = self.queryset
+            user_id = self.request.query_params.get("user_id")
+            if user_id:
+                queryset = queryset.filter(user__id=user_id)
         is_active = str(self.request.query_params.get("is_active"))
 
         if is_active == "True":

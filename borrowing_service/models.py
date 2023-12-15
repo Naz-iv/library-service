@@ -26,3 +26,6 @@ class Borrowing(models.Model):
 
     class Meta:
         ordering = ["-is_active", "-borrow_date"]
+
+    def __str__(self):
+        return f"{self.user.name} borrowed {self.book.title}"
