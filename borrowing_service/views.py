@@ -41,13 +41,13 @@ class BorrowingViewSet(
         serializer.save(user=self.request.user)
 
 
-@api_view(["PUT"])
+@api_view(["POST"])
 @permission_classes([IsAuthenticated])
 @transaction.atomic
 def borrowing_return(request, pk):
     borrowing = Borrowing.objects.get(pk=pk)
 
-    if request.method == "PUT":
+    if request.method == "POST":
         if borrowing.is_active:
             borrowing.is_active = False
             borrowing.expected_return_date = timezone.now()
