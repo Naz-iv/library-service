@@ -32,8 +32,8 @@ def calculate_fine_amount(borrowing: Borrowing) -> int:
 
 def get_checkout_session(borrowing: Borrowing, payment_id: int) -> Session:
     if (
-            borrowing.actual_return_date
-            and borrowing.actual_return_date > borrowing.expected_return_date
+        borrowing.actual_return_date
+        and borrowing.actual_return_date > borrowing.expected_return_date
     ):
         payment_amount = calculate_fine_amount(borrowing)
     else:
@@ -48,9 +48,7 @@ def get_checkout_session(borrowing: Borrowing, payment_id: int) -> Session:
                 "price": stripe.Price.create(
                     currency="usd",
                     unit_amount=payment_amount,
-                    product_data={
-                        "name": borrowing.book.title
-                    },
+                    product_data={"name": borrowing.book.title},
                 ),
                 "quantity": 1,
             },
@@ -61,14 +59,14 @@ def get_checkout_session(borrowing: Borrowing, payment_id: int) -> Session:
     )
 
 
-def get_payment(borrowing: Borrowing) -> Payment|None:
+def get_payment(borrowing: Borrowing) -> Payment | None:
     """Create payment instance for borrowing"""
     payment_type = Payment.PaymentTypes.PAYMENT
 
     if not borrowing.is_active:
         if (
-                borrowing.actual_return_date
-                and borrowing.actual_return_date > borrowing.expected_return_date
+            borrowing.actual_return_date
+            and borrowing.actual_return_date > borrowing.expected_return_date
         ):
             payment_type = Payment.PaymentTypes.FINE
         else:

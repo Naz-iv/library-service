@@ -8,7 +8,9 @@ from rest_framework.response import Response
 from borrowing_service.models import Borrowing
 from borrowing_service.serializers import (
     BorrowingSerializer,
-    BorrowingCreateSerializer, BorrowingDetailSerializer, BorrowingListSerializer,
+    BorrowingCreateSerializer,
+    BorrowingDetailSerializer,
+    BorrowingListSerializer,
 )
 from payment_service.services import get_payment
 

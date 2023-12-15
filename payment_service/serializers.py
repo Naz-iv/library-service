@@ -5,16 +5,13 @@ from payment_service.models import Payment
 
 
 class PaymentSerializer(serializers.ModelSerializer):
-
     class Meta:
         model = Payment
         fields = "__all__"
 
 
 class PaymentListSerializer(PaymentSerializer):
-    borrowing = serializers.StringRelatedField(
-        many=False, read_only=True
-    )
+    borrowing = serializers.StringRelatedField(many=False, read_only=True)
 
     class Meta:
         model = Payment
@@ -24,5 +21,5 @@ class PaymentListSerializer(PaymentSerializer):
             "money_to_be_paid",
             "payment_type",
             "status",
-            "money_to_be_paid"
+            "money_to_be_paid",
         )
