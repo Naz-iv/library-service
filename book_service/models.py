@@ -27,3 +27,6 @@ class Book(models.Model):
     class Meta:
         unique_together = ("title", "author", "cover")
         ordering = ["title", "author", "-inventory"]
+
+    def __str__(self):
+        return f"{self.title} ({self.author})"
