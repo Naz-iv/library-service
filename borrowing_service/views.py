@@ -1,13 +1,15 @@
-from django.shortcuts import render
+from django.utils import timezone
+from django.db import transaction
 from rest_framework import viewsets, mixins
+from rest_framework.decorators import api_view, permission_classes
 from rest_framework.permissions import IsAuthenticated
+from rest_framework.response import Response
 
 from borrowing_service.models import Borrowing
 from borrowing_service.serializers import (
     BorrowingSerializer,
     BorrowingCreateSerializer,
 )
-from book_service.models import Book
 
 
 class BorrowingViewSet(
@@ -20,14 +22,40 @@ class BorrowingViewSet(
     permission_classes = (IsAuthenticated,)
 
     def get_queryset(self):
-        return self.queryset.filter(user=self.request.user)
+        queryset = self.queryset.filter(user=self.request.user)
+        is_active = str(self.request.query_params.get("is_active"))
+
+        if is_active == "True":
+            queryset = queryset.filter(is_active=True)
+        elif is_active == "False":
+            queryset = queryset.filter(is_active=False)
+        return queryset
 
     def get_serializer_class(self):
 
         if self.action == "create":
             return BorrowingCreateSerializer
-
         return BorrowingSerializer
 
     def perform_create(self, serializer):
         serializer.save(user=self.request.user)
+
+
+@api_view(["PUT"])
+@permission_classes([IsAuthenticated])
+@transaction.atomic
+def borrowing_return(request, pk):
+    borrowing = Borrowing.objects.get(pk=pk)
+
+    if request.method == "PUT":
+        if borrowing.is_active:
+            borrowing.is_active = False
+            borrowing.expected_return_date = timezone.now()
+            borrowing.book.inventory += 1
+            borrowing.book.save()
+            borrowing.save()
+
+            return Response({"status": "success", "message": "Thank you! The book is returned "}, status=200)
+
+        return Response({"status": "fail", "message": "Book is already returned"}, status=400)
+
