@@ -9,18 +9,18 @@ from borrowing_service.models import Borrowing
 logger = get_task_logger(__name__)
 
 
-@shared_task(bind=True)
-def check_overdue_task(self):
-    print("Doing stuff")
-    # borrowings = Borrowing.objects.filter(
-    #     expected_return_date__lte=timezone.now()+timezone.timedelta(days=1),
-    #     is_active=True
-    # )
-    # if len(borrowings):
-    #     for borrowing in borrowings.all():
-    #         """Send a notification"""
-    #         pass
-    # else:
-    #     """Send a notification"""
-    #     pass
-    # return "Done sending notifications!"
+# @shared_task(bind=True)
+# def check_overdue_task(self):
+#     print("Doing stuff")
+#     borrowings = Borrowing.objects.filter(
+#         expected_return_date__lte=timezone.now()+timezone.timedelta(days=1),
+#         is_active=True
+#     )
+#     if len(borrowings):
+#         for borrowing in borrowings.all():
+#             """Send a notification"""
+#             pass
+#     else:
+#         """Send a notification"""
+#         pass
+#     return "Done sending notifications!"
