@@ -1,11 +1,8 @@
+from django.db import transaction
 from rest_framework import serializers
-from django.utils import timezone
+from rest_framework.exceptions import ValidationError
 
 from borrowing_service.models import Borrowing
-from book_service.models import Book
-
-
-RETURN_TERM = timezone.timedelta(days=14)
 
 
 class BorrowingSerializer(serializers.ModelSerializer):
@@ -17,12 +14,8 @@ class BorrowingSerializer(serializers.ModelSerializer):
             "expected_return_date",
             "actual_return_date",
             "book",
-            "user"
-        )
-
-    def create(self, validated_data):
-        return Borrowing.objects.create(
-            **validated_data
+            "user",
+            "is_active"
         )
 
 
@@ -30,3 +23,17 @@ class BorrowingCreateSerializer(serializers.ModelSerializer):
     class Meta:
         model = Borrowing
         fields = ("book",)
+
+    @transaction.atomic
+    def create(self, validated_data):
+        user = validated_data.get("user")
+        borrowed_book = validated_data.get("book")
+        if borrowed_book.inventory == 0:
+            raise ValidationError("Sorry no books available!")
+        if user.borrowings.filter(is_active=True).count():
+            raise ValidationError("You must return your active borrowing!")
+        borrowed_book.inventory -= 1
+        borrowed_book.save()
+        return Borrowing.objects.create(
+            **validated_data
+        )

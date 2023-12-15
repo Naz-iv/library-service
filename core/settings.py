@@ -9,7 +9,7 @@ https://docs.djangoproject.com/en/4.2/topics/settings/
 For the full list of settings and their values, see
 https://docs.djangoproject.com/en/4.2/ref/settings/
 """
-
+from datetime import timedelta
 from pathlib import Path
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
@@ -134,8 +134,19 @@ REST_FRAMEWORK = {
     ),
 }
 
-# Celery
-CELERY_BROKER_URL = "redis://127.0.0"
-CELERY_TIMEZONE = "Ukraine/Kyiv"
-CELERY_TASK_TRACK_STARTED = True
-CELERY_TASK_TIME_LIMIT = 30 * 60
+SIMPLE_JWT = {
+    "ACCESS_TOKEN_LIFETIME": timedelta(minutes=60),
+    "REFRESH_TOKEN_LIFETIME": timedelta(days=1),
+    "ROTATE_REFRESH_TOKENS": False,
+}
+
+# CELERY_BROKER_URL = 'redis://127.0.0.1:6379'
+# CELERY_ACCEPT_CONTENT = ['application/json']
+# CELERY_RESULT_SERIALIZER = 'json'
+# CELERY_TASK_SERIALIZER = 'json'
+# CELERY_TIMEZONE = "Ukraine/Kyiv"
+
+# CELERY_RESULT_BACKEND = 'django-db'
+
+# #CELERY BEAT
+# CELERY_BEAT_SCHEDULER = 'django_celery_beat.schedulers:DatabaseScheduler'
