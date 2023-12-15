@@ -4,6 +4,7 @@ from django.test import TestCase
 from django.urls import reverse
 from rest_framework import status
 from rest_framework.test import APIClient
+from rest_framework_simplejwt.tokens import RefreshToken
 
 from book_service.models import Book
 from book_service.serializers import BookListSerializer, BookSerializer
@@ -39,16 +40,19 @@ class UnauthenticatedApiTests(TestCase):
     def test_book_create_forbidden(self):
         response = self.client.post(BOOK_URL, {})
 
-        self.assertEqual(response.status_code, status.HTTP_403_FORBIDDEN)
+        self.assertEqual(response.status_code, status.HTTP_401_UNAUTHORIZED)
 
 
 class AuthenticatedApiTests(TestCase):
     def setUp(self):
         self.client = APIClient()
         self.user = get_user_model().objects.create(
-            username="user", password="password123"
+            email="user1@example.com", password="password123"
         )
-        self.client.force_login(self.user)
+        self.refresh_token = RefreshToken.for_user(self.user)
+        self.access_token = str(self.refresh_token.access_token)
+        self.client.credentials(HTTP_AUTHORIZATION=f"Bearer {self.access_token}")
+
         self.book1 = Book.objects.create(
             title="Inferno",
             author="Dan Broun",
@@ -100,9 +104,12 @@ class AdminApiTests(TestCase):
     def setUp(self):
         self.client = APIClient()
         self.user = get_user_model().objects.create(
-            username="user", password="password123", is_staff=True
+            email="user@example.com", password="password123", is_staff=True
         )
-        self.client.force_login(self.user)
+        self.refresh_token = RefreshToken.for_user(self.user)
+        self.access_token = str(self.refresh_token.access_token)
+        self.client.credentials(HTTP_AUTHORIZATION=f"Bearer {self.access_token}")
+
         self.book = Book.objects.create(
             title="Inferno",
             author="Dan Broun",

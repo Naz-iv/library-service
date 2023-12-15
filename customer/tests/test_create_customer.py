@@ -9,21 +9,20 @@ class CustomerTests(TestCase):
         self.client = APIClient()
 
     def test_create_customer(self):
-        url = '/api/users/'
+        url = "/api/users/"
         data = {
-            'email': 'testuser@example.com',
-            'password': 'testpass',
+            "email": "testuser@example.com",
+            "password": "testpass",
         }
-        response = self.client.post(url, data, format='json')
+        response = self.client.post(url, data, format="json")
 
         self.assertEqual(response.status_code, status.HTTP_201_CREATED)
-        self.assertIn('id', response.data)
-        self.assertEqual(response.data['email'], 'testuser@example.com')
+        self.assertIn("id", response.data)
+        self.assertEqual(response.data["email"], "testuser@example.com")
 
     def test_create_superuser(self):
         User = get_user_model()
         admin_user = User.objects.create_superuser(
-            email='adminuser@example.com',
-            password='adminpass'
+            email="adminuser@example.com", password="adminpass"
         )
         self.assertTrue(admin_user.is_superuser)
