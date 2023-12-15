@@ -6,25 +6,23 @@ from rest_framework_simplejwt.tokens import RefreshToken
 
 
 class ManageCustomerViewTests(TestCase):
-
     def setUp(self):
         self.user = get_user_model().objects.create_user(
-            email="test@example.com",
-            password="testpassword"
+            email="test@example.com", password="testpassword"
         )
         self.client = APIClient()
         self.refresh_token = RefreshToken.for_user(self.user)
         self.access_token = str(self.refresh_token.access_token)
-        self.client.credentials(HTTP_AUTHORIZATION=f'Bearer {self.access_token}')
+        self.client.credentials(HTTP_AUTHORIZATION=f"Bearer {self.access_token}")
 
     def test_retrieve_customer_profile(self):
-        response = self.client.get('/api/users/me/')
+        response = self.client.get("/api/users/me/")
         self.assertEqual(response.status_code, status.HTTP_200_OK)
-        self.assertEqual(response.data['email'], self.user.email)
+        self.assertEqual(response.data["email"], self.user.email)
 
     def test_update_customer_profile(self):
         new_data = {"first_name": "New", "last_name": "Name"}
-        response = self.client.patch('/api/users/me/', new_data, format='json')
+        response = self.client.patch("/api/users/me/", new_data, format="json")
         self.assertEqual(response.status_code, status.HTTP_200_OK)
         self.user.refresh_from_db()
         self.assertEqual(self.user.first_name, new_data["first_name"])
@@ -32,5 +30,7 @@ class ManageCustomerViewTests(TestCase):
 
     def test_update_customer_profile_unauthenticated(self):
         unauthenticated_client = APIClient()
-        response = unauthenticated_client.patch('/api/users/me/', {"first_name": "New"}, format='json')
+        response = unauthenticated_client.patch(
+            "/api/users/me/", {"first_name": "New"}, format="json"
+        )
         self.assertEqual(response.status_code, status.HTTP_401_UNAUTHORIZED)
