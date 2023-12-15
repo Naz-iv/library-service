@@ -28,4 +28,4 @@ class Borrowing(models.Model):
         ordering = ["-is_active", "-borrow_date"]
 
     def __str__(self):
-        return f"{self.user.name} borrowed {self.book.title}"
+        return f"{self.user} borrowed {self.book.title}"
