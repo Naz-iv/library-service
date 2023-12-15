@@ -134,3 +134,9 @@ REST_FRAMEWORK = {
         "rest_framework_simplejwt.authentication.JWTAuthentication",
     ),
 }
+
+# Celery
+CELERY_BROKER_URL = "redis://127.0.0"
+CELERY_TIMEZONE = "Ukraine/Kyiv"
+CELERY_TASK_TRACK_STARTED = True
+CELERY_TASK_TIME_LIMIT = 30 * 60
