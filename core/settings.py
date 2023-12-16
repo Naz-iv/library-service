@@ -150,18 +150,10 @@ SIMPLE_JWT = {
     "ROTATE_REFRESH_TOKENS": False,
 }
 
-CELERY_BROKER_URL=os.environ["RABBIT_URL"]
+CELERY_BROKER_URL = os.environ["RABBIT_URL"]
 
 #CELERY BEAT
 CELERY_BEAT_SCHEDULER = "django_celery_beat.schedulers:DatabaseScheduler"
-
-# Celery schedule for checking is checkout schedule expired
-CELERY_SCHEDULE = {
-    "check-payment-session-expiry": {
-        "task": "payment_service.tasks.verify_session_status",
-        "schedule": 60.0,
-    },
-}
 
 STRIPE_SECRET_KEY = os.environ.get("STRIPE_SECRET_KEY")
 STRIPE_PUBLISHABLE_KEY = os.environ.get("STRIPE_PUBLISHABLE_KEY")
