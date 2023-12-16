@@ -28,5 +28,5 @@ class Payment(models.Model):
     session_url = models.URLField(null=True, blank=True)
     session_id = models.CharField(max_length=255, null=True, blank=True)
     money_to_be_paid = models.DecimalField(
-        max_digits=10000, decimal_places=2, null=True, blank=True
+        max_digits=15, decimal_places=2, null=True, blank=True
     )
