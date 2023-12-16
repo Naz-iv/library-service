@@ -1,8 +1,10 @@
 from __future__ import annotations
 
 import stripe
+from celery import shared_task
 
 from django.urls import reverse
+from stripe.checkout import Session
 
 from borrowing_service.models import Borrowing
 from core import settings
@@ -38,7 +40,7 @@ def get_checkout_session(borrowing: Borrowing, payment_id: int) -> Session:
     success_url = reverse("payment_service:payments-payment-successful", args=[payment_id])
     cancel_url = reverse("payment_service:payments-payment-canceled", args=[payment_id])
     stripe.api_key = settings.STRIPE_SECRET_KEY
-    return stripe.checkout.Session.create(
+    return Session.create(
         payment_method_types=["card"],
         line_items=[
             {
@@ -51,8 +53,8 @@ def get_checkout_session(borrowing: Borrowing, payment_id: int) -> Session:
             },
         ],
         mode="payment",
-        success_url=success_url,
-        cancel_url=cancel_url,
+        success_url=settings.DOMAIN + success_url,
+        cancel_url=settings.DOMAIN + cancel_url,
     )
 
 
