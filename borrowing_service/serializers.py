@@ -1,8 +1,10 @@
 from django.db import transaction
+from django.db.models import Q
 from rest_framework import serializers
 from rest_framework.exceptions import ValidationError
 
 from borrowing_service.models import Borrowing
+from payment_service.models import Payment
 from payment_service.serializers import (
     PaymentSerializer,
     PaymentListSerializer
@@ -33,10 +35,20 @@ class BorrowingCreateSerializer(serializers.ModelSerializer):
     def create(self, validated_data):
         user = validated_data.get("user")
         borrowed_book = validated_data.get("book")
+
         if borrowed_book.inventory == 0:
             raise ValidationError("Sorry no books available!")
-        if user.borrowings.filter(is_active=True).count():
-            raise ValidationError("You must return your active borrowing!")
+
+        pending_payments = Payment.objects.filter(
+            Q(borrowing__user_id=user.id)
+            & Q(status=Payment.PaymentStatus.PENDING)
+        ).count()
+        if pending_payments:
+            raise ValidationError(
+                "You must complete your pending payments "
+                "before borrowing new book!"
+            )
+
         borrowed_book.inventory -= 1
         borrowed_book.save()
         borrowing = Borrowing.objects.create(

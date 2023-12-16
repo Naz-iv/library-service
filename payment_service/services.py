@@ -1,11 +1,8 @@
 from __future__ import annotations
 
-from datetime import datetime
-
 import stripe
-from decimal import Decimal
 
-from django.urls import reverse_lazy, reverse
+from django.urls import reverse
 from stripe.checkout import Session
 
 from borrowing_service.models import Borrowing
@@ -39,8 +36,15 @@ def get_checkout_session(borrowing: Borrowing, payment_id: int) -> Session:
     else:
         payment_amount = calculate_payment_amount(borrowing)
 
-    success_url = reverse("payment_service:success", args=[payment_id])
-    cancel_url = reverse("payment_service:cancel", args=[payment_id])
+    success_url = reverse(
+        "payment_service:payments-payment-successful",
+        args=[payment_id]
+    )
+    cancel_url = reverse(
+        "payment_service:payments-payment-canceled",
+        args=[payment_id]
+    )
+    stripe.api_key = settings.STRIPE_SECRET_KEY
     return Session.create(
         payment_method_types=["card"],
         line_items=[
@@ -54,8 +58,8 @@ def get_checkout_session(borrowing: Borrowing, payment_id: int) -> Session:
             },
         ],
         mode="payment",
-        success_url=success_url,
-        cancel_url=cancel_url,
+        success_url=settings.DOMAIN + success_url,
+        cancel_url=settings.DOMAIN + cancel_url,
     )
 
 

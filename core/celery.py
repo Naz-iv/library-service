@@ -26,12 +26,16 @@ app.conf.update(
 app.config_from_object(settings, namespace="CELERY")
 
 # Celery Beat Settings
-# app.conf.beat_schedule = {
-#     "check-overdue-task": {
-#         "task": "borrowing_service.tasks.check_overdue_task",
-#         "schedule": crontab(minute="*/1"),
-#     }
-# }
+app.conf.beat_schedule = {
+    "check-overdue-task": {
+        "task": "borrowing_service.tasks.check_overdue_task",
+        "schedule": crontab(minute="*/1"),
+    },
+    "check-payment-session-expiry": {
+        "task": "payment_service.tasks.verify_session_status",
+        "schedule": crontab(minute="*/1"),
+    },
+}
 
 # Load task modules from all registered Django apps.
 app.autodiscover_tasks()
