@@ -40,11 +40,13 @@ class BorrowingCreateSerializer(serializers.ModelSerializer):
             raise ValidationError("Sorry no books available!")
 
         pending_payments = Payment.objects.filter(
-            Q(borrowing__user_id=user.id) & Q(status=Payment.PaymentStatus.PENDING)
+            Q(borrowing__user_id=user.id)
+            & Q(status=Payment.PaymentStatus.PENDING)
         ).count()
         if pending_payments:
             raise ValidationError(
-                "You must complete your pending payments before borrowing new book!"
+                "You must complete your pending payments "
+                "before borrowing new book!"
             )
 
         borrowed_book.inventory -= 1
