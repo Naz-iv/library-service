@@ -38,6 +38,8 @@ urlpatterns = [
          include("payment_service.urls", namespace="payment_service")),
 
     path("api/doc/", SpectacularAPIView.as_view(), name="schema"),
-    path("api/doc/swagger/", SpectacularSwaggerView.as_view(url_name="schema"), name="swagger"),
-    path("api/doc/redoc/", SpectacularRedocView.as_view(url_name="schema"), name="redoc"),
+    path("api/doc/swagger/",
+         SpectacularSwaggerView.as_view(url_name="schema"), name="swagger"),
+    path("api/doc/redoc/",
+         SpectacularRedocView.as_view(url_name="schema"), name="redoc"),
 ]
