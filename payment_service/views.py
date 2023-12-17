@@ -32,6 +32,7 @@ class PaymentViewSet(viewsets.ModelViewSet):
 
     @action(methods=["GET"], url_path="success", detail=True)
     def payment_successful(self, request, pk: None):
+        """Endpoint for redirection after successful payment"""
         payment = self.get_object()
         session = stripe.checkout.Session.retrieve(payment.session_id)
         status = session.get("payment_intent", {}).get("status")
@@ -54,6 +55,7 @@ class PaymentViewSet(viewsets.ModelViewSet):
 
     @action(methods=["GET"], url_path="cancel", detail=True)
     def payment_canceled(self, request, pk: None):
+        """Endpoint for redirection after payment was canceled or failed"""
         return Response(
             {"status": "fail",
              "message": "Payment was canceled. Please complete payment "
@@ -63,6 +65,7 @@ class PaymentViewSet(viewsets.ModelViewSet):
 
     @action(methods=["POST"], url_path="renew-session", detail=True)
     def renew_checkout(self, request, pk: None):
+        """Endpoint for renewing checkout session if it expired"""
         payment = self.get_object()
         new_session = get_checkout_session(payment.borrowing, payment.id)
 

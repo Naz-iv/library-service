@@ -16,8 +16,6 @@ def check_if_session_expired(session_id: str) -> bool:
 @shared_task
 def verify_session_status() -> None:
     """Verify if pending sessions did not expire"""
-    print("checking for expired checkouts")
-
     payments = Payment.objects.filter(status=Payment.PaymentStatus.PENDING)
 
     for payment in payments:
