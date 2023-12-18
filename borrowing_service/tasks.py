@@ -19,7 +19,7 @@ logger = get_task_logger(__name__)
 def check_overdue_task(self):
     print("Doing stuff")
     borrowings = Borrowing.objects.filter(
-        expected_return_date__lte=timezone.now()+timezone.timedelta(days=1),
+        expected_return_date__lte=timezone.now() + timezone.timedelta(days=1),
         is_active=True
     )
     users = [borrowing.user for borrowing in borrowings.all()]
@@ -38,7 +38,7 @@ def check_overdue_task(self):
     for user in get_user_model().objects.all():
         if user not in users:
             send_notification(
-            TelegramUser.objects.get(user_id=borrowing.user.pk).chat_id,
-            "No borrowings overdue today!"
-        )
+                TelegramUser.objects.get(user_id=borrowing.user.pk).chat_id,
+                "No borrowings overdue today!"
+            )
     return "Done sending notifications!"
