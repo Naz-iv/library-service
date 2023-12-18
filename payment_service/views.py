@@ -40,7 +40,7 @@ class PaymentViewSet(viewsets.ModelViewSet):
         """Endpoint for redirection after successful payment"""
         payment = self.get_object()
         session = stripe.checkout.Session.retrieve(payment.session_id)
-        status = session.get("payment_intent", {}).get("status")
+        status = session.get("status")
         if status != "succeeded":
             return Response(
                 {"status": "fail",

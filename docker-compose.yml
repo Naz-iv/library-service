@@ -30,7 +30,8 @@ services:
     restart: always
     build:
       context: .
-    command: ./scripts/run_celery.sh
+    command: >
+      sh -c "celery -A core.celery worker -l info"
     volumes:
       - .:/app
     env_file:
@@ -42,12 +43,13 @@ services:
   beat:
     build:
         context: .
-    command: ./scripts/run_celery_beat.sh
+    command: >
+      sh -c "celery -A core.celery beat -l info --pidfile=/tmp/core.pid"
     volumes:
-        - .:/app
+      - .:/app
     depends_on:
-        - celery
-        - rabbitmq3
+      - celery
+      - rabbitmq3
 
   rabbitmq3:
     container_name: "rabbitmq"
@@ -55,3 +57,17 @@ services:
     ports:
       - 5672:5672
       - 15672:15672
+
+  bot:
+    build:
+      context: .
+    restart: always
+    command: >
+      sh -c "python manage.py run_telegram_bot"
+    env_file:
+      - .env
+    volumes:
+      - .:/app
+    depends_on:
+      - app
+      - db

@@ -9,7 +9,7 @@ def check_if_session_expired(session_id: str) -> bool:
     session = stripe.checkout.Session.retrieve(session_id)
     print(session)
     if session:
-        status = session.get("payment_intent", {}).get("status")
+        status = session.get("status")
         if status == "expired":
             return True
     return False
