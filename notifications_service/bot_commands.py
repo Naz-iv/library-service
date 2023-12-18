@@ -1,4 +1,5 @@
 from django.contrib.auth import get_user_model
+from django.shortcuts import get_object_or_404
 
 from borrowing_service.models import Borrowing
 from notifications_service.models import TelegramUser
@@ -47,3 +48,9 @@ def user_borrowings(bot, message) -> None:
     ])
 
     bot.reply_to(message, borrowings_info)
+
+
+def send_payment_notification(bot, user_id, message) -> None:
+    chat_id = get_object_or_404(TelegramUser, user_id=user_id)
+
+    bot.send_message(chat_id=chat_id, text=message)
