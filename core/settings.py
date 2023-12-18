@@ -57,6 +57,7 @@ INSTALLED_APPS = [
     "book_service",
     "borrowing_service",
     "payment_service",
+    "notifications_service"
 ]
 
 MIDDLEWARE = [
@@ -175,6 +176,10 @@ CELERY_BEAT_SCHEDULER = "django_celery_beat.schedulers:DatabaseScheduler"
 STRIPE_SECRET_KEY = os.environ.get("STRIPE_SECRET_KEY")
 STRIPE_PUBLISHABLE_KEY = os.environ.get("STRIPE_PUBLISHABLE_KEY")
 
+# Telegram settings
+TELEGRAM_BOT_TOKEN = os.getenv("TELEGRAM_BOT_TOKEN")
+CHAT_ID = os.getenv("CHAT_ID")
+CHAT_URL = os.getenv("CHAT_URL")
 DOMAIN = os.environ["DOMAIN"]
 
 DEBUG_TOOLBAR_CONFIG = {
