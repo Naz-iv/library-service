@@ -50,6 +50,7 @@ INSTALLED_APPS = [
     "borrowing_service",
     "payment_service",
     "notifications_service"
+    "drf_spectacular"
 ]
 
 MIDDLEWARE = [
@@ -143,6 +144,14 @@ REST_FRAMEWORK = {
     "DEFAULT_AUTHENTICATION_CLASSES": (
         "rest_framework_simplejwt.authentication.JWTAuthentication",
     ),
+    "DEFAULT_SCHEMA_CLASS": "drf_spectacular.openapi.AutoSchema",
+}
+
+SPECTACULAR_SETTINGS = {
+    "TITLE": "Your Project API",
+    "DESCRIPTION": "Your project description",
+    "VERSION": "1.0.0",
+    "SERVE_INCLUDE_SCHEMA": False,
 }
 
 SIMPLE_JWT = {
@@ -151,7 +160,7 @@ SIMPLE_JWT = {
     "ROTATE_REFRESH_TOKENS": False,
 }
 
-CELERY_BROKER_URL=os.environ["RABBIT_URL"]
+CELERY_BROKER_URL = os.environ["RABBIT_URL"]
 
 #CELERY BEAT
 CELERY_BEAT_SCHEDULER = "django_celery_beat.schedulers:DatabaseScheduler"
@@ -163,3 +172,5 @@ STRIPE_PUBLISHABLE_KEY = os.environ.get("STRIPE_PUBLISHABLE_KEY")
 TELEGRAM_BOT_TOKEN = os.getenv("TELEGRAM_BOT_TOKEN")
 CHAT_ID = os.getenv("CHAT_ID")
 CHAT_URL = os.getenv("CHAT_URL")
+DOMAIN = os.environ["DOMAIN"]
+

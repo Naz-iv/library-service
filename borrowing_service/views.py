@@ -1,5 +1,6 @@
 from django.utils import timezone
 from django.db import transaction
+from drf_spectacular.utils import extend_schema, OpenApiParameter
 from rest_framework import viewsets, mixins
 from rest_framework.decorators import api_view, permission_classes
 from rest_framework.permissions import IsAuthenticated
@@ -54,11 +55,24 @@ class BorrowingViewSet(
     def perform_create(self, serializer):
         serializer.save(user=self.request.user)
 
+    @extend_schema(
+        parameters=[
+            OpenApiParameter(
+                name="is_active",
+                type={"type": "string", "items": {"type": "string"}},
+                description="Filter by borrowing status (ex. ?is_active=True)"
+            )
+        ]
+    )
+    def list(self, request, *args, **kwargs):
+        return super().list(request, args, kwargs)
+
 
 @api_view(["POST"])
 @permission_classes([IsAuthenticated])
 @transaction.atomic
 def borrowing_return(request, pk):
+    """Endpoint for returning book"""
     borrowing = Borrowing.objects.get(pk=pk)
 
     if request.method == "POST":

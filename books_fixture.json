@@ -300,14 +300,6 @@
     }
   },
   {
-    "model": "contenttypes.contenttype",
-    "pk": 7,
-    "fields": {
-      "app_label": "book_service",
-      "model": "book"
-    }
-  },
-  {
     "model": "book_service.book",
     "pk": 1,
     "fields": {
