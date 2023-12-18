@@ -10,6 +10,7 @@ def check_if_session_expired(session_id: str) -> bool:
     print(session)
     if session:
         status = session.status
+
         if status == "expired":
             return True
     return False

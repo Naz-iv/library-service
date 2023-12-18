@@ -41,8 +41,11 @@ class PaymentViewSet(viewsets.ModelViewSet):
         """Endpoint for redirection after successful payment"""
         payment = self.get_object()
         session = stripe.checkout.Session.retrieve(payment.session_id)
+        dockerize-bot
+
         status = session.status
         if status != "complete":
+
             return Response(
                 {"status": "fail",
                  "message": "Payment failed, please complete payment "
