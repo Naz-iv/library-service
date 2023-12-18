@@ -10,18 +10,6 @@ from notifications_service.models import TelegramUser
 @receiver(post_save, sender=Borrowing)
 def notify_new_borrowing(sender, instance, created, **kwargs):
     if created:
-<<<<<<< HEAD
-        borrowing_info = (
-            "New borrowing created:\n\n"
-            f"-Book: {instance.book}\n"
-            f"--Borrow date: {instance.borrow_date}\n"
-            f"--Expected return date: {instance.expected_return_date}\n"
-        )
-        send_notification(
-            TelegramUser.objects.get(user_id=instance.user.pk).chat_id,
-            borrowing_info
-        )
-=======
         try:
             borrowing_info = (
                 "New borrowing created:\n\n"
@@ -35,4 +23,3 @@ def notify_new_borrowing(sender, instance, created, **kwargs):
             )
         except TelegramUser.DoesNotExist:
             pass
->>>>>>> 613219309799928dfc2b508eb819b8f5992cafd6
