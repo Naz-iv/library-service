@@ -48,9 +48,3 @@ def user_borrowings(bot, message) -> None:
     ])
 
     bot.reply_to(message, borrowings_info)
-
-
-def send_payment_notification(bot, user_id, message) -> None:
-    chat_id = get_object_or_404(TelegramUser, user_id=user_id)
-
-    bot.send_message(chat_id=chat_id, text=message)
