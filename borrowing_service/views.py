@@ -22,14 +22,14 @@ class BorrowingViewSet(
     mixins.RetrieveModelMixin,
     viewsets.GenericViewSet
 ):
-    queryset = Borrowing.objects.select_related("book", "user")
+    queryset = Borrowing.objects.all()
     permission_classes = (IsAuthenticated,)
 
     def get_queryset(self):
+        queryset = self.queryset.select_related("book", "user")
         if not self.request.user.is_superuser:
-            queryset = self.queryset.filter(user=self.request.user)
+            queryset = queryset.filter(user=self.request.user)
         else:
-            queryset = self.queryset
             user_id = self.request.query_params.get("user_id")
             if user_id:
                 queryset = queryset.filter(user__id=user_id)
