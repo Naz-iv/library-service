@@ -1,7 +1,7 @@
 import telebot
 from django.core.management import BaseCommand
 
-from core.settings import CHAT_ID, TELEGRAM_BOT_TOKEN
+from core.settings import TELEGRAM_BOT_TOKEN
 from notifications_service.bot_commands import (welcome_message,
                                                 help_information,
                                                 user_borrowings,
