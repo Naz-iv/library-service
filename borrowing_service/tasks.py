@@ -25,7 +25,9 @@ def check_overdue_task(self):
     users = [borrowing.user for borrowing in borrowings.all()]
     for borrowing in borrowings:
         try:
-            telegram_user = TelegramUser.objects.get(user_id=borrowing.user.pk).chat_id
+            telegram_user = TelegramUser.objects.get(
+                user_id=borrowing.user.pk
+            ).chat_id
             borrowing_info = (
                 "You have overdue borrowing:\n\n"
                 f"-Book: {borrowing.book}\n"
@@ -42,7 +44,9 @@ def check_overdue_task(self):
     for user in get_user_model().objects.all():
         if user not in users:
             try:
-                telegram_user = TelegramUser.objects.get(user_id=user.pk).chat_id,
+                telegram_user = TelegramUser.objects.get(
+                    user_id=user.pk
+                ).chat_id,
                 send_notification(
                     telegram_user,
                     "No borrowings overdue today!"
