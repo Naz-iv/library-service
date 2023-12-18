@@ -38,7 +38,7 @@ def check_overdue_task(self):
     for user in get_user_model().objects.all():
         if user not in users:
             send_notification(
-                TelegramUser.objects.get(user_id=borrowing.user.pk).chat_id,
+                TelegramUser.objects.get(user_id=user.pk).chat_id,
                 "No borrowings overdue today!"
             )
     return "Done sending notifications!"
