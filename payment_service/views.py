@@ -16,7 +16,9 @@ stripe.api_key = settings.STRIPE_SECRET_KEY
 
 
 class PaymentViewSet(viewsets.ModelViewSet):
-    queryset = Payment.objects.select_related("borrowing", "borrowing__book", "borrowing__user")
+    queryset = Payment.objects.select_related(
+        "borrowing", "borrowing__book", "borrowing__user"
+    )
     permission_classes = (IsAuthenticated,)
 
     def get_queryset(self):
