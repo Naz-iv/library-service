@@ -22,7 +22,7 @@ class BorrowingViewSet(
     mixins.RetrieveModelMixin,
     viewsets.GenericViewSet
 ):
-    queryset = Borrowing.objects.all()
+    queryset = Borrowing.objects.select_related("book", "user")
     permission_classes = (IsAuthenticated,)
 
     def get_queryset(self):

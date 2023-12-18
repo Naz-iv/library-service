@@ -24,6 +24,7 @@ from drf_spectacular.views import (
 
 urlpatterns = [
     path("admin/", admin.site.urls),
+    path("__debug__/", include("debug_toolbar.urls")),
     path(
         "api/book_service/",
         include("book_service.urls", namespace="book_service")
