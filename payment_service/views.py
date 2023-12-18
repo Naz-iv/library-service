@@ -19,13 +19,15 @@ stripe.api_key = settings.STRIPE_SECRET_KEY
 
 
 class PaymentViewSet(viewsets.ModelViewSet):
-    queryset = Payment.objects.prefetch_related("borrowing")
+    queryset = Payment.objects.select_related(
+        "borrowing", "borrowing__book", "borrowing__user"
+    )
     permission_classes = (IsAuthenticated,)
 
     def get_queryset(self):
         if (not self.request.user.is_staff
                 or not self.request.user.is_superuser):
-            return self.queryset.filter(borrowing__user=self.request.user.id)
+            return self.queryset.filter(borrowing__user=self.request.user)
         return self.queryset
 
     def get_serializer_class(self):
