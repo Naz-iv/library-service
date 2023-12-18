@@ -8,6 +8,7 @@ from stripe.checkout import Session
 from borrowing_service.models import Borrowing
 from core import settings
 from payment_service.models import Payment
+from notification_service.bot_commands import send_telegram_notification
 
 
 def calculate_payment_amount(borrowing: Borrowing) -> int:
@@ -89,3 +90,15 @@ def get_payment(borrowing: Borrowing) -> Payment | None:
     payment.save()
 
     return payment
+
+
+def successful_payment_notification(payment: Payment) -> None:
+    """Send Telegram notification after successful payment"""
+    user = payment.borrowing.user
+    amount_total = payment.money_to_be_paid / 100
+    book_name = payment.borrowing.book.title
+
+    message = (f"Your payment of {amount_total} dollars "
+               f"for {book_name} was successful")
+
+    send_telegram_notification(user.id, message)
