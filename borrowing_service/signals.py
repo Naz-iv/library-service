@@ -17,6 +17,6 @@ def notify_new_borrowing(sender, instance, created, **kwargs):
             f"--Expected return date: {instance.expected_return_date}\n"
         )
         send_notification(
-            TelegramUser.objects.get(user_id=instance.user_id).chat_id,
+            TelegramUser.objects.get(user_id=instance.user.pk).chat_id,
             borrowing_info
         )
