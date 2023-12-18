@@ -10,7 +10,10 @@ from payment_service.serializers import (
 )
 
 from payment_service.models import Payment
-from payment_service.services import get_checkout_session
+from payment_service.services import (
+    get_checkout_session,
+    successful_payment_notification
+)
 
 stripe.api_key = settings.STRIPE_SECRET_KEY
 
@@ -47,6 +50,9 @@ class PaymentViewSet(viewsets.ModelViewSet):
             )
         payment.status = "paid"
         payment.save()
+
+        successful_payment_notification(payment)
+
         return Response(
             {
                 "status": "success",
