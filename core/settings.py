@@ -16,6 +16,9 @@ from dotenv import load_dotenv
 
 load_dotenv()
 
+def show_toolbar(request):
+    return True
+
 # Build paths inside the project like this: BASE_DIR / "subdir".
 BASE_DIR = Path(__file__).resolve().parent.parent
 
@@ -31,6 +34,9 @@ DEBUG = True
 
 ALLOWED_HOSTS = []
 
+INTERNAL_IPS = [
+    "127.0.0.1",
+]
 
 # Application definition
 
@@ -45,16 +51,18 @@ INSTALLED_APPS = [
     "rest_framework_simplejwt",
     "django_celery_results",
     "django_celery_beat",
+    "drf_spectacular",
+    "debug_toolbar",
     "customer",
     "book_service",
     "borrowing_service",
     "payment_service",
     "notifications_service"
-    "drf_spectacular"
 ]
 
 MIDDLEWARE = [
     "django.middleware.security.SecurityMiddleware",
+    "debug_toolbar.middleware.DebugToolbarMiddleware",
     "django.contrib.sessions.middleware.SessionMiddleware",
     "django.middleware.common.CommonMiddleware",
     "django.middleware.csrf.CsrfViewMiddleware",
@@ -174,3 +182,6 @@ CHAT_ID = os.getenv("CHAT_ID")
 CHAT_URL = os.getenv("CHAT_URL")
 DOMAIN = os.environ["DOMAIN"]
 
+DEBUG_TOOLBAR_CONFIG = {
+    'SHOW_TOOLBAR_CALLBACK': show_toolbar,
+}
