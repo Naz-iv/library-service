@@ -2,6 +2,14 @@
 
 This app was created for managing library data, with information on books, borrowings and payments regarding them.
 
+Implemented:
+    - CRUD for Books, Borrowings and Users
+    - Stripe Payment system
+    - Telegram notifications
+    - Scheduled tasks
+    - Project documentation
+    
+
 # .env
 
 Before running the project either in Docker or locally, you need to create .env file in the project`s root directory.
