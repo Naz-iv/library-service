@@ -23,3 +23,5 @@ def notify_new_borrowing(sender, instance, created, **kwargs):
             )
         except TelegramUser.DoesNotExist:
             pass
+        except Exception as e:
+            print(str(e))
