@@ -2,7 +2,7 @@ from drf_spectacular.utils import extend_schema, OpenApiParameter
 from rest_framework import viewsets
 
 from book_service.models import Book
-from book_service.permissions import IsAdminOrReadOnly
+from core.permissions import IsAdminOrReadOnly
 from book_service.serializers import BookListSerializer, BookSerializer
 
 
