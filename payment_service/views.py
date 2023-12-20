@@ -40,12 +40,6 @@ class PaymentViewSet(viewsets.ModelViewSet):
     @action(methods=["GET"], url_path="success", detail=True)
     def payment_successful(self, request, pk: None):
         """Endpoint for redirection after successful payment"""
-        # if not request.user.is_authenticated:
-        #     return Response(
-        #         {"status": "Unauthorized",
-        #          "message": "Please authenticate to access resource!"},
-        #         status=401,
-        #     )
 
         payment = self.get_object()
         session = stripe.checkout.Session.retrieve(payment.session_id)
