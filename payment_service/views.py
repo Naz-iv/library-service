@@ -1,9 +1,10 @@
 import stripe
 from django.conf import settings
-from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
 from rest_framework.decorators import action
 from rest_framework import viewsets
+
+from core.permissions import IsAdminOrReadOnly
 from payment_service.serializers import (
     PaymentListSerializer,
     PaymentSerializer
@@ -20,7 +21,7 @@ stripe.api_key = settings.STRIPE_SECRET_KEY
 
 class PaymentViewSet(viewsets.ModelViewSet):
     queryset = Payment.objects.all()
-    permission_classes = (IsAuthenticated,)
+    permission_classes = (IsAdminOrReadOnly,)
 
     def get_queryset(self):
         queryset = self.queryset.select_related(
@@ -39,6 +40,13 @@ class PaymentViewSet(viewsets.ModelViewSet):
     @action(methods=["GET"], url_path="success", detail=True)
     def payment_successful(self, request, pk: None):
         """Endpoint for redirection after successful payment"""
+        if not request.user.is_authenticated:
+            return Response(
+                {"status": "Unauthorized",
+                 "message": "Please authenticate to access resource!"},
+                status=401,
+            )
+
         payment = self.get_object()
         session = stripe.checkout.Session.retrieve(payment.session_id)
 
